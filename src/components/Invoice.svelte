@@ -2,9 +2,7 @@
 <script lang="ts">
     import { Button, Flex, Center, Card } from '@svelteuidev/core';
     import { navigate } from 'svelte-routing';
-  
 
-    
     let invoiceName : string = "Nouvelle facture";
     let invoiceDate : string = "2022-01-01";
     let storeName  : string= "Auchan";
@@ -18,9 +16,8 @@
     function toggleVisibility() {
         isVisible = !isVisible;
     }
-g
-    async function createInvoice() {
-      
+
+    async function createInvoice() { 
         invoices = [
             ...invoices,
             {
