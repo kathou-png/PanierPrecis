@@ -7,7 +7,7 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = env("DATABASE_URL")
+  url      = "file:./dev.db"
 }
 model User {
   id    Int     @id @default(autoincrement())
@@ -15,6 +15,7 @@ model User {
   username  String @unique
   password  String 
   invoices  Invoice[]
+  marketPlace Marketplace[]
 }
 
 model Invoice {
@@ -23,8 +24,10 @@ model Invoice {
   creationDate   DateTime @default(now())
   lastEditedDate DateTime @updatedAt
   items          Item[]
-  user           User?    @relation(fields: [userId], references: [id])
-  userId         Int?
+  user           User    @relation(fields: [userId], references: [id])
+  userId         Int
+  marketPlace   Marketplace    @relation(fields: [marketPlaceId], references: [id])
+  marketPlaceId         Int
 }
 model Item {
   id         Int      @id @default(autoincrement())
@@ -41,4 +44,11 @@ model Category {
   id         Int      @id @default(autoincrement())
   name       String
   items      Item[]
+}
+model Marketplace {
+  id         Int      @id @default(autoincrement())
+  name       String
+  invoices    Invoice[]
+  user           User    @relation(fields: [userId], references: [id])
+  userId         Int
 }

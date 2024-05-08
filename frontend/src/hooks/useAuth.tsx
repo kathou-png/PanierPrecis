@@ -1,11 +1,15 @@
 import { createContext, useContext, useMemo } from "react";
-import { User, UserLogin } from "../types.ts/user";
+import { User, UserLogin } from "../types/user";
 import { useLocalStorage } from "./useLocalStorage";
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AuthContext = createContext<AuthContextType>({
+  user: null,
+  login: () => {},
+  logout: () => {},
+});
 
 export type AuthContextType = {
-  user: UserLogin | null;
+  user: User | null;
   login: (data: User) => void;
   logout: () => void;
 };
@@ -35,6 +39,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-export const useAuth = (): AuthContextType | undefined => {
+export const useAuth = (): AuthContextType => {
   return useContext(AuthContext);
 };

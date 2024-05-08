@@ -1,7 +1,7 @@
 export type Invoice = {
   id: string;
   name: string;
-  date: Date;
+  lastEditedDate: Date;
   marketPlace: string;
 };
 
@@ -31,4 +31,15 @@ export type InvoiceItem = {
   total: number;
   invoiceId: string;
   category: ItemCategory;
+};
+export type User = {
+  id?: number;
+  name: string;
+  email: string;
+  password: string;
+};
+
+export type UserLogin = {
+  email: string;
+  password: string;
 };

@@ -10,7 +10,7 @@ const Navbar = () => {
       flexDirection="row"
       width="100%"
       justifyContent="space-around"
-      backgroundColor="red"
+      padding="1rem"
     >
       <div>
         <Link to="/">Home</Link>

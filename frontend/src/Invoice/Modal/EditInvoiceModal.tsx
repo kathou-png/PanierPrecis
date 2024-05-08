@@ -12,7 +12,7 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react";
-import { InvoiceItem } from "../types";
+import { InvoiceItem } from "../../types/types";
 
 type Props = {
   isOpen: boolean;

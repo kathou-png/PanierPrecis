@@ -7,46 +7,33 @@ import {
   Box,
 } from "@chakra-ui/react";
 import { Layout } from "../Layout";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../hooks/useAuth";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { getAllUsers, submitLogin } from "./helpers/users";
+import { User } from "../types/user";
 
 export const LoginPage = () => {
   const [mail, setMail] = useState("");
   const [password, setPassword] = useState("");
   const { login } = useAuth();
   const navigate = useNavigate();
-  const submitLogin = async () => {
-    if (mail !== "" && password !== "") {
-      console.log(mail, password);
-      try {
-        const response = await fetch(
-          `http://localhost:3000/login?email=${encodeURIComponent(
-            mail
-          )}&password=${encodeURIComponent(password)}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        const res = await response.json();
+  const [users, setUsers] = useState<User[]>([]);
 
-        if (res.data) {
-          console.log(res);
-          if (res.data) {
-            await login({ email: mail, password });
-            navigate("/invoice");
-          }
-        }
-      } catch (err) {
-        console.error(err);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const fetchedUsers = await getAllUsers();
+        setUsers(fetchedUsers);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+        // Handle error
       }
-    } else {
-      alert("please provide a valid input");
-    }
-  };
+    };
+
+    fetchData();
+  }, []); // Empty dependency array to only run once on mount
+
   return (
     <Layout>
       <Box>
@@ -63,10 +50,31 @@ export const LoginPage = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value as string)}
           />
-          <Button mt={4} colorScheme="teal" type="submit" onClick={submitLogin}>
+          <Button
+            mt={4}
+            colorScheme="teal"
+            type="submit"
+            onClick={() => submitLogin({ mail, password, login, navigate })}
+          >
             Submit
           </Button>
           <FormHelperText>We'll never share your email.</FormHelperText>
+          {users.map((user) => (
+            <Button
+              onClick={() =>
+                submitLogin({
+                  mail: user.email,
+                  password: user.password,
+                  login,
+                  navigate,
+                })
+              }
+            >
+              <p>{user.name}</p>
+              <p>{user.email}</p>
+              <p>{user.password}</p>
+            </Button>
+          ))}
         </FormControl>
       </Box>
     </Layout>

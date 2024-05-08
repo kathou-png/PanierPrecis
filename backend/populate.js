@@ -22,6 +22,22 @@ async function main() {
         password: "password2",
       },
     });
+    const marketPlace1 = await prisma.marketplace.create({
+      data: {
+        id: 1,
+        name: "Auchan",
+        invoices: [],
+        userId: 1,
+      },
+    });
+    const marketPlace2 = await prisma.marketplace.create({
+      data: {
+        id: 1,
+        name: "Atac",
+        invoices: [],
+        userId: 2,
+      },
+    });
 
     // Create categories
     const category1 = await prisma.category.create({
@@ -41,6 +57,7 @@ async function main() {
       data: {
         name: "Invoice 1",
         userId: user1.id,
+        marketPlaceId: 1,
       },
     });
 
@@ -48,6 +65,7 @@ async function main() {
       data: {
         name: "Invoice 2",
         userId: user2.id,
+        marketPlaceId: 2,
       },
     });
 

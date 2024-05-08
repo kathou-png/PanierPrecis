@@ -13,7 +13,7 @@ import {
   Select,
   Button,
 } from "@chakra-ui/react";
-import { InvoiceItem, ItemCategory } from "../types";
+import { InvoiceItem, ItemCategory } from "../../types/types";
 import { useState } from "react";
 
 const invoiceDefaultList: InvoiceItem[] = [
@@ -36,7 +36,11 @@ const invoiceDefaultList: InvoiceItem[] = [
     category: ItemCategory.AUTRE,
   },
 ];
-export const ItemTable = () => {
+
+type Props = {
+  itemList: InvoiceItem[];
+};
+export const ItemTable = ({ itemList }: Props) => {
   const [newItem, setNewItem] = useState<InvoiceItem>({
     id: "",
     name: "new item",
@@ -47,7 +51,6 @@ export const ItemTable = () => {
     category: ItemCategory.AUTRE,
   });
   const [addItem, setAddItem] = useState(false);
-  const [invoiceList, setInvoiceList] = useState(invoiceDefaultList);
   return (
     <TableContainer margin={"2"} width={"80%"}>
       <Table variant="simple">
@@ -62,8 +65,8 @@ export const ItemTable = () => {
           </Tr>
         </Thead>
         <Tbody>
-          {invoiceList.map((invoice) => (
-            <Tr>
+          {itemList.map((invoice) => (
+            <Tr key={invoice.id}>
               <Td>{invoice.name}</Td>
               <Td>{invoice.price}</Td>
               <Td>{invoice.quantity}</Td>
