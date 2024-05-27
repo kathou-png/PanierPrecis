@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Layout } from "../Layout";
 import { AddInvoiceModal } from "./Modal/AddInvoiceModal";
 import { Button, Card, Flex, Grid, GridItem } from "@chakra-ui/react";
-import { Invoice } from "../types/types";
+import { Invoice } from "../types";
 import { EditIcon, ViewIcon } from "@chakra-ui/icons";
 import { EditInvoiceModal } from "./Modal/EditInvoiceModal";
 import { Link, useNavigate } from "react-router-dom";
@@ -18,11 +18,11 @@ export const InvoicePage = () => {
   const navigate = useNavigate();
   useEffect(() => {
     const fetchData = async () => {
+      if (!user) return;
       try {
         const fetchedInvoices = await getInvoiceByUser({
-          userId: user?.id ?? 0,
+          userId: user.id,
         });
-        console.log(fetchedInvoices);
         setInvoiceList(fetchedInvoices);
       } catch (error) {
         console.error("Error fetching invoices:", error);
@@ -30,9 +30,7 @@ export const InvoicePage = () => {
       }
     };
     if (user) {
-      console.log(user);
       fetchData();
-      console.log(invoiceList);
     }
   }, [user]);
 
@@ -44,8 +42,7 @@ export const InvoicePage = () => {
           {invoiceList.map((invoice) => (
             <GridItem key={invoice.id}>
               <Card key={invoice.id} width={"300px"} padding={4}>
-                <h3>{invoice.name}</h3>
-                <p>{invoice.marketPlace}</p>
+                <h3>{invoice.title}</h3>
                 <Flex gap={2}>
                   <Link to={`/invoice/${invoice.id}`}>See</Link>
                   <EditIcon
@@ -53,7 +50,7 @@ export const InvoicePage = () => {
                       setShowEditModal(true);
                     }}
                   />
-                  <ViewIcon onClick={() => navigate(`/byId/${invoice.id}`)} />
+                  <ViewIcon onClick={() => navigate(`/invoice/${invoice.id}`)} />
                 </Flex>
               </Card>
             </GridItem>

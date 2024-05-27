@@ -1,13 +1,14 @@
-import { fetchData } from "../../helpers/fetchData";
-import { Invoice, InvoiceItem } from "../../types/types";
+import { fetchData, postData } from "../../helpers/crud";
+import { Invoice, InvoiceItem } from "../../types";
+import { PostInvoicePayload } from "./types";
 
 export async function getInvoiceByUser({
   userId,
 }: {
   userId: number;
 }): Promise<Invoice[]> {
-  const url = `http://localhost:3000/invoices/byUser`;
-  return fetchData({ url, params: [{ name: "userId", value: userId }] });
+  const request = `/invoices/byUser`;
+  return fetchData({ request, params: [{ name: "userId", value: userId }] });
 }
 
 export async function getItemsByInvoice({
@@ -15,6 +16,11 @@ export async function getItemsByInvoice({
 }: {
   invoiceId: number;
 }): Promise<InvoiceItem[]> {
-  const url = `http://localhost:3000/items/byInvoice`;
-  return fetchData({ url, params: [{ name: "invoiceId", value: invoiceId }] });
+  const request = `/invoices/byId`;
+  return fetchData({ request, params: [{ name: "invoiceId", value: invoiceId }] });
+}
+
+export async function createNewInvoice(payload: PostInvoicePayload) {
+  const request = `/invoice`;
+  return postData({ request, payload });
 }

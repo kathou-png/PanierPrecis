@@ -1,6 +1,6 @@
 import { createContext, useContext, useMemo } from "react";
-import { User, UserLogin } from "../types/user";
 import { useLocalStorage } from "./useLocalStorage";
+import { User } from "../types";
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
@@ -17,13 +17,10 @@ export type AuthContextType = {
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useLocalStorage("user", null);
 
-  // call this function when you want to authenticate the user
-  const login = async (data: UserLogin) => {
-    console.log("login");
+  const login = async (data: unknown) => {
     setUser(data);
   };
 
-  // call this function to sign out logged in user
   const logout = () => {
     setUser(null);
   };
@@ -34,7 +31,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       login,
       logout,
     }),
-    [user, login, logout]
+    [user, logout]
   );
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

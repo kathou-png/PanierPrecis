@@ -12,14 +12,14 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react";
-import { InvoiceItem } from "../../types/types";
+import { Item } from "../../types";
 
 type Props = {
   isOpen: boolean;
   onClose: () => void;
 };
 
-const itemsList: InvoiceItem[] = [
+const itemsList: Item[] = [
   {
     id: "1",
     name: "Item 1",

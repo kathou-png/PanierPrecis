@@ -11,10 +11,10 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { getAllUsers, submitLogin } from "./helpers/users";
-import { User } from "../types/user";
+import { User } from "../types";
 
 export const LoginPage = () => {
-  const [mail, setMail] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -41,8 +41,8 @@ export const LoginPage = () => {
           <FormLabel>Email address</FormLabel>
           <Input
             type="email"
-            value={mail}
-            onChange={(e) => setMail(e.target.value as string)}
+            value={email}
+            onChange={(e) => setEmail(e.target.value as string)}
           />
           <FormLabel>Password</FormLabel>
           <Input
@@ -54,7 +54,7 @@ export const LoginPage = () => {
             mt={4}
             colorScheme="teal"
             type="submit"
-            onClick={() => submitLogin({ mail, password, login, navigate })}
+            onClick={() => submitLogin({ email, password, login, navigate })}
           >
             Submit
           </Button>
@@ -63,14 +63,14 @@ export const LoginPage = () => {
             <Button
               onClick={() =>
                 submitLogin({
-                  mail: user.email,
+                  email: user.email,
                   password: user.password,
                   login,
                   navigate,
                 })
               }
             >
-              <p>{user.name}</p>
+              <p>{user.username}</p>
               <p>{user.email}</p>
               <p>{user.password}</p>
             </Button>

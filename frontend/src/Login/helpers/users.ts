@@ -1,9 +1,9 @@
 import { NavigateFunction } from "react-router-dom";
-import { User, UserLogin } from "../../types/user";
+import { User } from "../../types";
 
 export async function getAllUsers(): Promise<User[]> {
   try {
-    const response = await fetch("http://localhost:3000/users");
+    const response = await fetch("/users");
     if (!response.ok) {
       throw new Error("Failed to fetch users");
     }
@@ -15,33 +15,31 @@ export async function getAllUsers(): Promise<User[]> {
   }
 }
 export const submitLogin = async ({
-  mail,
+  email,
   password,
   login,
   navigate,
 }: {
-  mail: string;
+  email: string;
   password: string;
   login: (data: User) => void;
   navigate: NavigateFunction;
 }) => {
-  if (mail !== "" && password !== "") {
+  if (email !== "" && password !== "") {
     try {
       const response = await fetch(
-        `http://localhost:3000/login?email=${encodeURIComponent(
-          mail
-        )}&password=${encodeURIComponent(password)}`,
+        "/login",
         {
-          method: "GET",
+          method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
+          body: JSON.stringify({ email, password }),
         }
       );
       const res = await response.json();
 
       if (res.data) {
-        console.log(res);
         if (res.data) {
           const user: User = res.data;
           await login(user);

@@ -1,7 +1,6 @@
 import {
   TableContainer,
   Table,
-  TableCaption,
   Thead,
   Tr,
   Th,
@@ -12,46 +11,63 @@ import {
   InputRightElement,
   Select,
   Button,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
 } from "@chakra-ui/react";
-import { InvoiceItem, ItemCategory } from "../../types/types";
-import { useState } from "react";
-
-const invoiceDefaultList: InvoiceItem[] = [
-  {
-    id: "1",
-    name: "Item 1",
-    price: 100,
-    quantity: 1,
-    total: 100,
-    invoiceId: "1",
-    category: ItemCategory.AUTRE,
-  },
-  {
-    id: "2",
-    name: "Item 2",
-    price: 200,
-    quantity: 2,
-    total: 400,
-    invoiceId: "1",
-    category: ItemCategory.AUTRE,
-  },
-];
+import { Category, InvoiceItem } from "../../types";
+import { useEffect, useState } from "react";
+import { addItemToInvoice, fetchAllCategories } from "./helpers/item";
 
 type Props = {
   itemList: InvoiceItem[];
+  invoiceId : number;
 };
-export const ItemTable = ({ itemList }: Props) => {
+export const ItemTable = ({ itemList, invoiceId }: Props) => {
   const [newItem, setNewItem] = useState<InvoiceItem>({
-    id: "",
-    name: "new item",
-    price: 10,
-    quantity: 1,
-    total: 0,
-    invoiceId: "",
-    category: ItemCategory.AUTRE,
+        // Properties from Item type
+      id: 0,
+      unitPrice: 10,
+      totalPrice: 1000,
+      quantity: '3',
+      invoiceId: 0,
+      productId: 0,
+      // Properties from Product type
+      title: 'test',
+      reference: 0,
+      createdAt: new Date(),
+      categoryId: 0,
+      category : ""
   });
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [newProductModal, setNewProductModal] = useState(false);
+  const [existingProductModal, setExistingProductModal] = useState(false);
+
+  useEffect(() => {
+    async function fetchCategories() {
+      try {
+        const response = await fetchAllCategories();
+        setCategories(response);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    }
+
+    fetchCategories();
+
+    // Cleanup function if needed
+    return () => {
+      // Cleanup code here
+    };
+  }, []); // Empty dependency array to fetch categories only once
+
   const [addItem, setAddItem] = useState(false);
   return (
+    <>
     <TableContainer margin={"2"} width={"80%"}>
       <Table variant="simple">
         {/* <TableCaption>Imperial to metric conversion factors</TableCaption> */}
@@ -65,35 +81,35 @@ export const ItemTable = ({ itemList }: Props) => {
           </Tr>
         </Thead>
         <Tbody>
-          {itemList.map((invoice) => (
-            <Tr key={invoice.id}>
-              <Td>{invoice.name}</Td>
-              <Td>{invoice.price}</Td>
-              <Td>{invoice.quantity}</Td>
-              <Td>{invoice.category}</Td>
-              <Td>{invoice.price / invoice.quantity}</Td>
+          {itemList.map((item) => (
+            <Tr key={item.id}>
+              <Td>{item.title}</Td>
+              <Td>{item.unitPrice}</Td>
+              <Td>{item.quantity}</Td>
+              <Td>{item.category}</Td>
+              <Td>{item.totalPrice / Number(item.quantity)}</Td>
             </Tr>
           ))}
           {addItem && (
             <Tr>
               <Td>
                 <Input
-                  isInvalid={newItem.name === ""}
-                  value={newItem.name}
+                  isInvalid={newItem.title === ""}
+                  value={newItem.title}
                   onChange={(e) =>
-                    setNewItem({ ...newItem, name: e.target.value })
+                    setNewItem({ ...newItem, title: e.target.value })
                   }
                 />
               </Td>
               <Td>
                 <InputGroup>
                   <Input
-                    isInvalid={newItem.price <= 0}
-                    value={newItem.price}
+                    isInvalid={newItem.totalPrice <= 0}
+                    value={newItem.totalPrice}
                     onChange={(e) =>
                       setNewItem({
                         ...newItem,
-                        price: parseFloat(
+                        totalPrice: parseFloat(
                           e.target.value === "" ? "0" : e.target.value
                         ),
                       })
@@ -111,12 +127,12 @@ export const ItemTable = ({ itemList }: Props) => {
 
               <Td>
                 <Input
-                  isInvalid={newItem.quantity <= 0}
+                  isInvalid={newItem.quantity <= '0'}
                   value={newItem.quantity}
                   onChange={(e) =>
                     setNewItem({
                       ...newItem,
-                      quantity: parseFloat(
+                      quantity: String(
                         e.target.value === "" ? "0" : e.target.value
                       ),
                     })
@@ -124,13 +140,13 @@ export const ItemTable = ({ itemList }: Props) => {
                 />
               </Td>
               <Td>
-                <Select placeholder="Select option">
-                  {Object.keys(ItemCategory).map((item) => (
-                    <option value={item}>{item}</option>
+                <Select placeholder="Select option" onChange={(e) => setNewItem({ ...newItem, categoryId: Number(e.target.value) })} value={newItem.categoryId}>
+                  {categories.map((item) => (
+                    <option key={item.id} value={item.id}>{item.title} {item.id}</option>
                   ))}
                 </Select>
               </Td>
-              <Td>{newItem.price / newItem.quantity}</Td>
+              <Td>{Number(newItem.totalPrice / Number(newItem.quantity)).toFixed(2)}</Td>
             </Tr>
           )}
           <Tr>
@@ -139,30 +155,40 @@ export const ItemTable = ({ itemList }: Props) => {
                 <Button
                   size={"sm"}
                   onClick={() => {
-                    setInvoiceList([...invoiceList, newItem]);
+                    // setInvoiceList([...invoiceList, newItem]);
                     setAddItem(false);
-                    setNewItem({
-                      id: "",
-                      name: "",
-                      price: 0,
-                      quantity: 0,
-                      total: 0,
-                      invoiceId: "",
-                      category: ItemCategory.AUTRE,
+                    addItemToInvoice(
+                      {
+                      unitPrice: newItem.unitPrice,
+                      totalPrice: newItem.totalPrice,
+                      quantity: newItem.quantity,
+                      productId : 1,
+                      categoryId : newItem.categoryId,
+                      invoiceId
                     });
                   }}
                 >
                   Créer
                 </Button>
               ) : (
+                <>
                 <Button
                   size={"sm"}
                   colorScheme="green"
                   margin="0"
-                  onClick={() => setAddItem(true)}
+                  onClick={() => setNewProductModal(true)}
                 >
-                  Add item
+                  New product
                 </Button>
+                 <Button
+                 size={"sm"}
+                 colorScheme="green"
+                 margin="0"
+                 onClick={() => setAddItem(true)}
+               >
+                 Add existing
+               </Button>
+               </>
               )}
             </Td>
             <Td></Td>
@@ -173,5 +199,40 @@ export const ItemTable = ({ itemList }: Props) => {
         </Tbody>
       </Table>
     </TableContainer>
+    <Modal isOpen={newProductModal} onClose={() => setNewProductModal(false)}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Modal Title</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            ici rentrer le nv produit
+          </ModalBody>
+
+          <ModalFooter>
+            <Button colorScheme='blue' mr={3} onClick={() => setNewProductModal(false)}>
+              Close
+            </Button>
+            <Button variant='ghost' onClick={() => setNewProductModal(false)}>OK</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+      <Modal isOpen={existingProductModal} onClose={() => setExistingProductModal(false)}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Modal Title</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            ici rentrer le nv produit
+          </ModalBody>
+
+          <ModalFooter>
+            <Button colorScheme='blue' mr={3} onClick={() => setNewProductModal(false)}>
+              Close
+            </Button>
+            <Button variant='ghost' onClick={() => setNewProductModal(false)}>OK</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
   );
 };

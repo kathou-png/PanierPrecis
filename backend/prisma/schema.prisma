@@ -9,46 +9,56 @@ datasource db {
   provider = "sqlite"
   url      = "file:./dev.db"
 }
+
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  username  String @unique
-  password  String 
-  invoices  Invoice[]
-  marketPlace Marketplace[]
+  id         Int       @id @default(autoincrement())
+  createdAt  DateTime  @default(now())
+  email String  @unique 
+  invoices   Invoice[]
+  password   String
+  username   String
 }
 
 model Invoice {
-  id             Int      @id @default(autoincrement())
-  name           String
-  creationDate   DateTime @default(now())
-  lastEditedDate DateTime @updatedAt
+  id             Int           @id @default(autoincrement())
+  createdAt      DateTime      @default(now())
+  groceryStore   GroceryStore  @relation(fields: [groceryStoreId], references: [id])
+  groceryStoreId Int
   items          Item[]
-  user           User    @relation(fields: [userId], references: [id])
+  title          String
+  user           User          @relation(fields: [userId], references: [id])
   userId         Int
-  marketPlace   Marketplace    @relation(fields: [marketPlaceId], references: [id])
-  marketPlaceId         Int
+  lastEditedDate DateTime @updatedAt
 }
 model Item {
-  id         Int      @id @default(autoincrement())
-  name       String
-  category   Category @relation(fields: [categoryId], references: [id])
-  date       DateTime
-  price      Float
-  invoice    Invoice  @relation(fields: [invoiceId], references: [id])
+  id         Int     @id @default(autoincrement())
+  invoice    Invoice @relation(fields: [invoiceId], references: [id])
   invoiceId  Int
-  categoryId Int
+  product    Product @relation(fields: [productId], references: [id])
+  productId  Int
+  quantity   String
+  totalPrice Int
+  unitPrice  Int
 }
 
-model Category {
-  id         Int      @id @default(autoincrement())
-  name       String
+model Product {
+  id         Int       @id @default(autoincrement())
+  title      String
+  reference  Int       @unique
+  createdAt  DateTime  @default(now())
+  categoryId Int
+  category   Category  @relation(fields: [categoryId], references: [id])
   items      Item[]
 }
-model Marketplace {
-  id         Int      @id @default(autoincrement())
-  name       String
-  invoices    Invoice[]
-  user           User    @relation(fields: [userId], references: [id])
-  userId         Int
+
+model GroceryStore {
+  id        Int       @id @default(autoincrement())
+  title     String
+  location  String
+  invoices  Invoice[]
+}
+model Category {
+  id        Int       @id @default(autoincrement())
+  title     String
+  products  Product[]
 }

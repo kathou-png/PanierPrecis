@@ -5,7 +5,6 @@ import "./index.css";
 import { ChakraProvider } from "@chakra-ui/react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import ErrorPage from "./components/error.tsx";
-import { DatavizPage } from "./Dataviz/Homepage.tsx";
 import { InvoicePage } from "./Invoice/InvoicePage.tsx";
 import { ItemPage } from "./Invoice/Item/ItemPage.tsx";
 import { LoginPage } from "./Login/LoginPage.tsx";
@@ -25,11 +24,6 @@ const router = createBrowserRouter([
   {
     path: "/invoice/:id", // Add a leading slash to the child path
     element: <ItemPage />,
-    errorElement: <ErrorPage />,
-  },
-  {
-    path: "/dataviz",
-    element: <DatavizPage />,
     errorElement: <ErrorPage />,
   },
   {

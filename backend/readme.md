@@ -8,5 +8,5 @@ For a migration :
 
 else :
 
-- prisma migrate dev --create-only
-- prisma migrate dev
+- npx prisma migrate dev --create-only
+- npx prisma migrate dev

@@ -20,9 +20,7 @@ const Navbar = () => {
           <div>
             <Link to="/invoice">Facture</Link>
           </div>
-          <div>
-            <Link to="/dataviz">Dataviz</Link>
-          </div>
+        
           <Button
             onClick={() => {
               logout();
