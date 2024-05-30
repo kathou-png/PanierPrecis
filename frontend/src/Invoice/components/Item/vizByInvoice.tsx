@@ -2,8 +2,8 @@ import { Box } from "@chakra-ui/react";
 import { Bar, BarChart, CartesianGrid, Legend, XAxis, YAxis } from "recharts";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import { getItemsByInvoice } from "../helpers/invoice";
-import { Item } from "../../types";
+import { Item } from "../../../types";
+import { getItemsByInvoice } from "../../helpers/invoice";
 
 export const VizByInvoice = () => {
   const [itemList, setItemList] = useState<Item[]>([]);

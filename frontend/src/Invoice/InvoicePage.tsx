@@ -1,17 +1,15 @@
 import { useEffect, useState } from "react";
 import { Layout } from "../Layout";
-import { AddInvoiceModal } from "./Modal/AddInvoiceModal";
-import { Button, Card, Flex, Grid, GridItem } from "@chakra-ui/react";
-import { Invoice } from "../types";
-import { EditIcon, ViewIcon } from "@chakra-ui/icons";
-import { EditInvoiceModal } from "./Modal/EditInvoiceModal";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { getInvoiceByUser } from "./helpers/invoice";
+import { Button, Card, Flex, Grid, GridItem } from "@chakra-ui/react";
+import { ViewIcon } from "@chakra-ui/icons";
+import { Invoice } from "../types";
+import { AddInvoiceModal } from "./components/Modal/AddInvoiceModal";
 
 export const InvoicePage = () => {
   const [showAddModal, setShowAddModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
   const [invoiceList, setInvoiceList] = useState<Invoice[]>([]);
   const { user } = useAuth();
 
@@ -32,7 +30,7 @@ export const InvoicePage = () => {
     if (user) {
       fetchData();
     }
-  }, [user]);
+  }, []);
 
   return (
     <Layout>
@@ -45,11 +43,6 @@ export const InvoicePage = () => {
                 <h3>{invoice.title}</h3>
                 <Flex gap={2}>
                   <Link to={`/invoice/${invoice.id}`}>See</Link>
-                  <EditIcon
-                    onClick={() => {
-                      setShowEditModal(true);
-                    }}
-                  />
                   <ViewIcon onClick={() => navigate(`/invoice/${invoice.id}`)} />
                 </Flex>
               </Card>
@@ -63,12 +56,7 @@ export const InvoicePage = () => {
           <AddInvoiceModal
             isOpen={showAddModal}
             onClose={() => setShowAddModal(false)}
-          />
-        )}
-        {showEditModal && (
-          <EditInvoiceModal
-            isOpen={showEditModal}
-            onClose={() => setShowEditModal(false)}
+            user={user}
           />
         )}
       </div>

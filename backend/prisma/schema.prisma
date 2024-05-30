@@ -11,54 +11,59 @@ datasource db {
 }
 
 model User {
-  id         Int       @id @default(autoincrement())
-  createdAt  DateTime  @default(now())
-  email String  @unique 
-  invoices   Invoice[]
-  password   String
-  username   String
+  id           Int            @id @default(autoincrement())
+  createdAt    DateTime       @default(now())
+  email        String         @unique
+  invoices     Invoice[]
+  password     String
+  username     String
+  GroceryStore GroceryStore[]
 }
 
 model Invoice {
-  id             Int           @id @default(autoincrement())
-  createdAt      DateTime      @default(now())
-  groceryStore   GroceryStore  @relation(fields: [groceryStoreId], references: [id])
+  id             Int          @id @default(autoincrement())
+  createdAt      DateTime     @default(now())
+  groceryStore   GroceryStore @relation(fields: [groceryStoreId], references: [id])
   groceryStoreId Int
   items          Item[]
   title          String
-  user           User          @relation(fields: [userId], references: [id])
+  user           User         @relation(fields: [userId], references: [id])
   userId         Int
-  lastEditedDate DateTime @updatedAt
+  lastEditedDate DateTime     @updatedAt
 }
+
 model Item {
   id         Int     @id @default(autoincrement())
   invoice    Invoice @relation(fields: [invoiceId], references: [id])
   invoiceId  Int
   product    Product @relation(fields: [productId], references: [id])
   productId  Int
-  quantity   String
+  quantity   Int
   totalPrice Int
   unitPrice  Int
 }
 
 model Product {
-  id         Int       @id @default(autoincrement())
+  id         Int      @id @default(autoincrement())
   title      String
-  reference  Int       @unique
-  createdAt  DateTime  @default(now())
+  reference  String   @unique
+  createdAt  DateTime @default(now())
   categoryId Int
-  category   Category  @relation(fields: [categoryId], references: [id])
+  category   Category @relation(fields: [categoryId], references: [id])
   items      Item[]
 }
 
 model GroceryStore {
-  id        Int       @id @default(autoincrement())
-  title     String
-  location  String
-  invoices  Invoice[]
+  id       Int       @id @default(autoincrement())
+  title    String
+  location String
+  invoices Invoice[]
+  userId   Int
+  category User      @relation(fields: [userId], references: [id])
 }
+
 model Category {
-  id        Int       @id @default(autoincrement())
-  title     String
-  products  Product[]
+  id       Int       @id @default(autoincrement())
+  title    String
+  products Product[]
 }

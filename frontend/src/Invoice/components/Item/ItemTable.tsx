@@ -18,10 +18,11 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Box,
 } from "@chakra-ui/react";
-import { Category, InvoiceItem } from "../../types";
 import { useEffect, useState } from "react";
 import { addItemToInvoice, fetchAllCategories } from "./helpers/item";
+import { InvoiceItem, Category } from "../../../types";
 
 type Props = {
   itemList: InvoiceItem[];
@@ -67,8 +68,8 @@ export const ItemTable = ({ itemList, invoiceId }: Props) => {
 
   const [addItem, setAddItem] = useState(false);
   return (
-    <>
-    <TableContainer margin={"2"} width={"80%"}>
+    <Box maxH="400px" overflowY="auto">
+    <TableContainer margin={"2"} width={"100%"}>
       <Table variant="simple">
         {/* <TableCaption>Imperial to metric conversion factors</TableCaption> */}
         <Thead>
@@ -81,16 +82,8 @@ export const ItemTable = ({ itemList, invoiceId }: Props) => {
           </Tr>
         </Thead>
         <Tbody>
-          {itemList.map((item) => (
-            <Tr key={item.id}>
-              <Td>{item.title}</Td>
-              <Td>{item.unitPrice}</Td>
-              <Td>{item.quantity}</Td>
-              <Td>{item.category}</Td>
-              <Td>{item.totalPrice / Number(item.quantity)}</Td>
-            </Tr>
-          ))}
-          {addItem && (
+
+        {addItem && (
             <Tr>
               <Td>
                 <Input
@@ -149,6 +142,15 @@ export const ItemTable = ({ itemList, invoiceId }: Props) => {
               <Td>{Number(newItem.totalPrice / Number(newItem.quantity)).toFixed(2)}</Td>
             </Tr>
           )}
+          {itemList.map((item) => (
+            <Tr key={item.id}>
+              <Td>{item.title}</Td>
+              <Td>{item.unitPrice}</Td>
+              <Td>{item.quantity}</Td>
+              <Td>{item.category}</Td>
+              <Td>{item.totalPrice / Number(item.quantity)}</Td>
+            </Tr>
+          ))}
           <Tr>
             <Td>
               {addItem ? (
@@ -233,6 +235,6 @@ export const ItemTable = ({ itemList, invoiceId }: Props) => {
           </ModalFooter>
         </ModalContent>
       </Modal>
-    </>
+      </Box>
   );
 };

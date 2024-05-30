@@ -6,12 +6,13 @@ import {
   Button,
   Box,
 } from "@chakra-ui/react";
-import { Layout } from "../Layout";
-import { useEffect, useState } from "react";
-import { useAuth } from "../hooks/useAuth";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../../hooks/useAuth";
+import { Layout } from "../../../Layout";
+import { User } from "../../../types";
 import { getAllUsers, submitLogin } from "./helpers/users";
-import { User } from "../types";
+
 
 export const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -32,7 +33,7 @@ export const LoginPage = () => {
     };
 
     fetchData();
-  }, []); // Empty dependency array to only run once on mount
+  }, []); 
 
   return (
     <Layout>

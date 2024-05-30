@@ -4,7 +4,6 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 const router = express.Router();
 
-
 router.get("/invoices", async function (req, res) {
   try {
     // Fetch all users from the database using Prisma
@@ -34,8 +33,8 @@ router.get("/invoices/byUser", async function (req, res) {
     if (!invoices) {
       return res.status(404).json({ error: "Invoices not found" });
     }
-     // Modify the response to include grocery store data
-     const responseData = invoices.map((invoice) => ({
+    // Modify the response to include grocery store data
+    const responseData = invoices.map((invoice) => ({
       id: invoice.id,
       title: invoice.title,
       created_at: invoice.createdAt,
@@ -70,9 +69,11 @@ router.get("/invoices/byId", async function (req, res) {
     }
 
     // Validate that each item has a valid productId
-    const invalidItems = invoice.items.filter(item => !item.productId);
+    const invalidItems = invoice.items.filter((item) => !item.productId);
     if (invalidItems.length > 0) {
-      return res.status(400).json({ error: "Some items are not related to a product" });
+      return res
+        .status(400)
+        .json({ error: "Some items are not related to a product" });
     }
 
     // Get products for each item
@@ -83,7 +84,7 @@ router.get("/invoices/byId", async function (req, res) {
             id: item.productId,
           },
           include: {
-            category: true
+            category: true,
           },
         });
         if (!product) {
@@ -94,16 +95,16 @@ router.get("/invoices/byId", async function (req, res) {
     );
 
     // Modify the response to include items and products
-    const responseData =  invoice.items.map((item, index) => ({
-        id: item.id,
-        reference: products[index].reference,
-        title: products[index].title,
-        unitPrice: item.unitPrice,
-        quantity : item.quantity,
-        totalPrice: item.totalPrice,
-        category : products[index].category.title
-        // Add other item properties as needed
-      }));
+    const responseData = invoice.items.map((item, index) => ({
+      id: item.id,
+      reference: products[index].reference,
+      title: products[index].title,
+      unitPrice: item.unitPrice,
+      quantity: item.quantity,
+      totalPrice: item.totalPrice,
+      category: products[index].category.title,
+      // Add other item properties as needed
+    }));
     res.status(200).json({ data: responseData });
   } catch (error) {
     // Handle errors
@@ -112,18 +113,32 @@ router.get("/invoices/byId", async function (req, res) {
   }
 });
 
-router.post('/invoice', async (req, res) => {
-  const { title, userId, status, groceryStoreId, items } = req.body;
+router.post("/invoice", async (req, res) => {
+  const { title, userId, groceryStoreId } = req.body;
+
   try {
     const invoice = await prisma.invoice.create({
       data: {
-        title,
-        userId,
-        createdAt: new Date(),
-        groceryStoreId,
+        title: title,
+        userId: userId,
+        groceryStoreId: groceryStoreId,
       },
     });
     res.status(201).json(invoice);
+  } catch (error) {
+    res.status(500).json({ error: "marche po" });
+  }
+});
+router.delete("/invoice", async (req, res) => {
+  const { invoiceId } = req.query;
+
+  try {
+    const invoice = await prisma.invoice.delete({
+      where: {
+        id: Number(invoiceId),
+      },
+    });
+    res.status(201).json("OK");
   } catch (error) {
     res.status(500).json({ error: "marche po" });
   }

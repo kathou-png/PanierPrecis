@@ -10,7 +10,7 @@ export async function fetchData<T>({
   request: string;
   params?: Params[];
 }): Promise<T> {
-  const baseUrl = process.env.REACT_APP_DEV_URL;
+  const baseUrl = "http://localhost:3000";
   try {
     let queryString = "";
     if (params) {
@@ -48,7 +48,7 @@ export async function postData<T>({
   contentType? : string;
 }): Promise<T> {
 
-  const baseUrl = process.env.REACT_APP_DEV_URL;
+  const baseUrl = "http://localhost:3000";
   try {
     const response = await fetch(baseUrl + request, {
       method: 'POST',
@@ -56,6 +56,43 @@ export async function postData<T>({
         'Content-Type': `${contentType}`,
       },
       body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch data");
+    }
+
+    const jsonRes: T = await response.json();
+    return jsonRes;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error; // Propagate the error to the caller if needed
+  }
+}
+export async function deleteData<T>({
+  request,
+  payload,
+}: {
+  request: string;
+  payload?: Params[];
+}): Promise<T> {
+
+  const baseUrl = "http://localhost:3000";
+  let queryString = "";
+  if (payload) {
+     queryString =
+      "?" +
+      payload
+        .map(
+          (param) =>
+            `${param.name}=${encodeURIComponent(param.value.toString())}`
+        )
+        .join("&");
+  }
+  const fullUrl = baseUrl + request + queryString;
+  try {
+    const response = await fetch(fullUrl, {
+      method: 'DELETE',
     });
 
     if (!response.ok) {

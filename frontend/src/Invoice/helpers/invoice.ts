@@ -1,4 +1,4 @@
-import { fetchData, postData } from "../../helpers/crud";
+import { deleteData, fetchData, postData } from "../../helpers/crud";
 import { Invoice, InvoiceItem } from "../../types";
 import { PostInvoicePayload } from "./types";
 
@@ -17,10 +17,18 @@ export async function getItemsByInvoice({
   invoiceId: number;
 }): Promise<InvoiceItem[]> {
   const request = `/invoices/byId`;
-  return fetchData({ request, params: [{ name: "invoiceId", value: invoiceId }] });
+  return fetchData({
+    request,
+    params: [{ name: "invoiceId", value: invoiceId }],
+  });
 }
 
 export async function createNewInvoice(payload: PostInvoicePayload) {
   const request = `/invoice`;
   return postData({ request, payload });
+}
+
+export async function deleteInvoice(payload: number) {
+  const request = `/invoice`;
+  return deleteData({request,  payload: [{ name: "invoiceId", value: payload }]  });
 }

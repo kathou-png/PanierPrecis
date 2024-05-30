@@ -4,7 +4,6 @@ const prisma = new PrismaClient();
 
 async function main() {
   const device = "hello";
-  console.log(device);
 }
 
 main()

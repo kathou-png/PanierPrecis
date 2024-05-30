@@ -1,5 +1,6 @@
 import { NavigateFunction } from "react-router-dom";
-import { User } from "../../types";
+import { User } from "../../../../types";
+
 
 export async function getAllUsers(): Promise<User[]> {
   try {
@@ -28,7 +29,7 @@ export const submitLogin = async ({
   if (email !== "" && password !== "") {
     try {
       const response = await fetch(
-        "/login",
+        "http://localhost:3000/login",
         {
           method: "POST",
           headers: {

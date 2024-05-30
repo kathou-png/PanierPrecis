@@ -10,10 +10,10 @@ function App() {
     <Layout>
       <Box>
         {authData?.user ? (
-          <Heading>{authData?.user.email}</Heading>
+          <Heading>Welcome, {authData.user.username}</Heading>
         ) : (
           <>
-            <Text>"Vous n'êtes pas connectés"</Text>
+            <Text>"You are not logged in"</Text>
             <Button onClick={() => navigate("/login")}>Login</Button>
           </>
         )}

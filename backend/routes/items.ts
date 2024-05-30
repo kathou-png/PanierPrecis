@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 const router = express.Router();
 
 router.post("/invoice/newItem", async function (req, res) {
-  const { unitPrice, totalPrice, quantity, productId, invoiceId} = req.body;
+  const { unitPrice, totalPrice, quantity, productId, invoiceId } = req.body;
 
   try {
     const invoice = await prisma.invoice.findUnique({
@@ -18,7 +18,6 @@ router.post("/invoice/newItem", async function (req, res) {
       return res.status(404).json({ error: "Invoice not found" });
     }
     const products = await prisma.product.findMany();
-    console.log(products);
 
     if (!products) {
       return res.status(404).json({ error: "Product not found" });

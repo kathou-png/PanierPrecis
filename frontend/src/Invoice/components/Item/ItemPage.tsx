@@ -1,12 +1,13 @@
+import { ChevronLeftIcon } from "@chakra-ui/icons";
+import { Heading, Button } from "@chakra-ui/react";
+import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Layout } from "../../Layout";
-import { Button, Heading } from "@chakra-ui/react";
+import { Layout } from "../../../Layout";
+import { InvoiceItem } from "../../../types";
+import { deleteInvoice, getItemsByInvoice } from "../../helpers/invoice";
 import { ItemTable } from "./ItemTable";
 import { VizByInvoice } from "./vizByInvoice";
-import { ChevronLeftIcon } from "@chakra-ui/icons";
-import { useState, useEffect } from "react";
-import { InvoiceItem } from "../../types";
-import { getItemsByInvoice } from "../helpers/invoice";
+
 
 export const ItemPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -40,6 +41,7 @@ export const ItemPage = () => {
       <ItemTable itemList={itemList} invoiceId={Number(id)}/>
       <VizByInvoice />
       <Button onClick={() => navigate("/dataviz")}>See total analysis</Button>
+      <Button onClick={() => deleteInvoice(Number(id))}>Delete invoice</Button>
     </Layout>
   );
 };

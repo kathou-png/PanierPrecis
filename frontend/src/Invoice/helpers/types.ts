@@ -1,5 +1,5 @@
 export type PostInvoicePayload = {
-  name: string;
+  title: string;
   userId: number;
-  marketPlaceId: number;
+  groceryStoreId: number;
 };
