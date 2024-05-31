@@ -1,11 +1,15 @@
 import { createContext, useContext, useMemo } from "react";
-import { User, UserLogin } from "../types.ts/user";
 import { useLocalStorage } from "./useLocalStorage";
+import { User } from "../types";
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AuthContext = createContext<AuthContextType>({
+  user: null,
+  login: () => {},
+  logout: () => {},
+});
 
 export type AuthContextType = {
-  user: UserLogin | null;
+  user: User | null;
   login: (data: User) => void;
   logout: () => void;
 };
@@ -13,13 +17,10 @@ export type AuthContextType = {
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useLocalStorage("user", null);
 
-  // call this function when you want to authenticate the user
-  const login = async (data: UserLogin) => {
-    console.log("login");
+  const login = async (data: unknown) => {
     setUser(data);
   };
 
-  // call this function to sign out logged in user
   const logout = () => {
     setUser(null);
   };
@@ -30,11 +31,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       login,
       logout,
     }),
-    [user, login, logout]
+    [user, logout]
   );
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-export const useAuth = (): AuthContextType | undefined => {
+export const useAuth = (): AuthContextType => {
   return useContext(AuthContext);
 };

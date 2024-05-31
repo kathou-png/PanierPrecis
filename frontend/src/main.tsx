@@ -5,11 +5,14 @@ import "./index.css";
 import { ChakraProvider } from "@chakra-ui/react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import ErrorPage from "./components/error.tsx";
-import { DatavizPage } from "./Dataviz/Homepage.tsx";
-import { InvoicePage } from "./Invoice/Homepage.tsx";
-import { ItemPage } from "./Invoice/Item/ItemPage.tsx";
-import { LoginPage } from "./Login/LoginPage.tsx";
 import { AuthProvider } from "./hooks/useAuth.tsx";
+import { ItemPage } from "./Invoice/components/Item/ItemPage.tsx";
+import { LoginPage } from "./Invoice/components/Login/LoginPage.tsx";
+import { InvoicePage } from "./Invoice/InvoicePage.tsx";
+import {
+  RecoilRoot,
+} from 'recoil';
+
 
 const router = createBrowserRouter([
   {
@@ -28,11 +31,6 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
   },
   {
-    path: "/dataviz",
-    element: <DatavizPage />,
-    errorElement: <ErrorPage />,
-  },
-  {
     path: "/login",
     element: <LoginPage />,
     errorElement: <ErrorPage />,
@@ -42,9 +40,11 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <ChakraProvider>
+      <RecoilRoot>
       <AuthProvider>
         <RouterProvider router={router} />
       </AuthProvider>
+      </RecoilRoot>
     </ChakraProvider>
   </React.StrictMode>
 );

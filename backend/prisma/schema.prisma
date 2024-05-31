@@ -7,38 +7,66 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = env("DATABASE_URL")
+  url      = "file:./dev.db"
 }
+
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  username  String @unique
-  password  String 
-  invoices  Invoice[]
+  id           Int            @id @default(autoincrement())
+  createdAt    DateTime       @default(now())
+  email        String         @unique
+  invoices     Invoice[]
+  password     String
+  username     String
+  GroceryStore GroceryStore[]
+  Product      Product[]
 }
 
 model Invoice {
-  id             Int      @id @default(autoincrement())
-  name           String
-  creationDate   DateTime @default(now())
-  lastEditedDate DateTime @updatedAt
+  id             Int          @id @default(autoincrement())
+  createdAt      DateTime     @default(now())
+  groceryStore   GroceryStore @relation(fields: [groceryStoreId], references: [id])
+  groceryStoreId Int
   items          Item[]
-  user           User?    @relation(fields: [userId], references: [id])
-  userId         Int?
+  title          String
+  user           User         @relation(fields: [userId], references: [id])
+  userId         Int
+  lastEditedDate DateTime     @updatedAt
 }
+
 model Item {
-  id         Int      @id @default(autoincrement())
-  name       String
-  category   Category @relation(fields: [categoryId], references: [id])
-  date       DateTime
-  price      Float
-  invoice    Invoice  @relation(fields: [invoiceId], references: [id])
+  id         Int     @id @default(autoincrement())
+  invoice    Invoice @relation(fields: [invoiceId], references: [id])
   invoiceId  Int
+  product    Product @relation(fields: [productId], references: [id])
+  productId  Int
+  quantity   Int
+  totalPrice Int
+  unitPrice  Int
+}
+
+model Product {
+  id         Int      @id @default(autoincrement())
+  title      String
+  reference  String   @unique
+  createdAt  DateTime @default(now())
   categoryId Int
+  userId     Int
+  user       User     @relation(fields: [userId], references: [id])
+  category   Category @relation(fields: [categoryId], references: [id])
+  items      Item[]
+}
+
+model GroceryStore {
+  id       Int       @id @default(autoincrement())
+  title    String
+  location String
+  invoices Invoice[]
+  userId   Int
+  user     User      @relation(fields: [userId], references: [id])
 }
 
 model Category {
-  id         Int      @id @default(autoincrement())
-  name       String
-  items      Item[]
+  id       Int       @id @default(autoincrement())
+  title    String
+  products Product[]
 }

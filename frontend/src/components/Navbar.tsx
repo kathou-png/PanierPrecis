@@ -10,7 +10,7 @@ const Navbar = () => {
       flexDirection="row"
       width="100%"
       justifyContent="space-around"
-      backgroundColor="red"
+      padding="1rem"
     >
       <div>
         <Link to="/">Home</Link>
@@ -20,9 +20,7 @@ const Navbar = () => {
           <div>
             <Link to="/invoice">Facture</Link>
           </div>
-          <div>
-            <Link to="/dataviz">Dataviz</Link>
-          </div>
+        
           <Button
             onClick={() => {
               logout();

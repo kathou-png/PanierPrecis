@@ -14,14 +14,22 @@
     "@chakra-ui/react": "^2.8.2",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.0",
+    "@table-library/react-table-library": "^4.1.7",
+    "axios": "^1.7.2",
     "framer-motion": "^11.0.22",
     "localforage": "^1.10.0",
     "match-sorter": "^6.3.4",
+    "pdf-lib": "^1.17.1",
     "react": "^18.2.0",
+    "react-dnd": "^16.0.1",
     "react-dom": "^18.2.0",
+    "react-dropzone": "^14.2.3",
+    "react-icons": "^5.2.1",
     "react-router-dom": "^6.22.3",
     "recharts": "^2.12.3",
-    "sort-by": "^1.2.0"
+    "recoil": "^0.7.7",
+    "sort-by": "^0.0.2",
+    "swr": "^2.2.5"
   },
   "devDependencies": {
     "@eslint/compat": "^1.0.1",
