@@ -13,7 +13,6 @@ import { Layout } from "../../../Layout";
 import { User } from "../../../types";
 import { getAllUsers, submitLogin } from "./helpers/users";
 
-
 export const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -33,7 +32,7 @@ export const LoginPage = () => {
     };
 
     fetchData();
-  }, []); 
+  }, []);
 
   return (
     <Layout>

@@ -14,7 +14,6 @@ PanierPrecis is a project aiming to build a precise shopping cart application wi
 - React: A JavaScript library for building user interfaces.
 - TypeScript: A typed superset of JavaScript that compiles to plain JavaScript.
 
-
 ### Backend
 
 - Prisma: A modern database access toolkit for TypeScript and Node.js.
@@ -35,3 +34,4 @@ To get a local copy of the project up and running, follow these steps:
 
    ```bash
    git clone https://github.com/kathou-png/PanierPrecis.git
+   ```
