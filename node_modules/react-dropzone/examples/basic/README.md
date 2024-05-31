@@ -4,14 +4,15 @@ For click and keydown behavior, use the `getInputProps()` fn and use the returne
 
 Furthermore, the hook supports folder drag 'n' drop by default. See [file-selector](https://github.com/react-dropzone/file-selector) for more info about supported browsers.
 
+
 ```jsx harmony
-import React from "react";
-import { useDropzone } from "react-dropzone";
+import React from 'react';
+import {useDropzone} from 'react-dropzone';
 
 function Basic(props) {
-  const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
-
-  const files = acceptedFiles.map((file) => (
+  const {acceptedFiles, getRootProps, getInputProps} = useDropzone();
+  
+  const files = acceptedFiles.map(file => (
     <li key={file.path}>
       {file.path} - {file.size} bytes
     </li>
@@ -19,7 +20,7 @@ function Basic(props) {
 
   return (
     <section className="container">
-      <div {...getRootProps({ className: "dropzone" })}>
+      <div {...getRootProps({className: 'dropzone'})}>
         <input {...getInputProps()} />
         <p>Drag 'n' drop some files here, or click to select files</p>
       </div>
@@ -31,21 +32,21 @@ function Basic(props) {
   );
 }
 
-<Basic />;
+<Basic />
 ```
 
 Dropzone with `disabled` property:
 
 ```jsx harmony
-import React from "react";
-import { useDropzone } from "react-dropzone";
+import React from 'react';
+import {useDropzone} from 'react-dropzone';
 
 function Basic(props) {
-  const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
-    disabled: true,
+  const {acceptedFiles, getRootProps, getInputProps} = useDropzone({
+    disabled: true
   });
 
-  const files = acceptedFiles.map((file) => (
+  const files = acceptedFiles.map(file => (
     <li key={file.name}>
       {file.name} - {file.size} bytes
     </li>
@@ -53,7 +54,7 @@ function Basic(props) {
 
   return (
     <section className="container">
-      <div {...getRootProps({ className: "dropzone disabled" })}>
+      <div {...getRootProps({className: 'dropzone disabled'})}>
         <input {...getInputProps()} />
         <p>Drag 'n' drop some files here, or click to select files</p>
       </div>
@@ -65,5 +66,5 @@ function Basic(props) {
   );
 }
 
-<Basic />;
+<Basic />
 ```
