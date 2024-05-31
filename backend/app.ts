@@ -8,6 +8,7 @@ import login from "./routes/login";
 import items from "./routes/items";
 import categories from "./routes/categories";
 import groceryStore from "./routes/groceryStore";
+import products from "./routes/products";
 const cors = require("cors");
 
 const app = express();
@@ -19,6 +20,7 @@ app.use(bodyParser.json());
 app.use(routes);
 app.use(users);
 app.use(login);
+app.use(products);
 app.use(invoices);
 app.use(items);
 app.use(categories);

@@ -41,19 +41,18 @@ export async function fetchData<T>({
 export async function postData<T>({
   request,
   payload,
-  contentType = 'application/json'
+  contentType = "application/json",
 }: {
   request: string;
   payload?: T;
-  contentType? : string;
+  contentType?: string;
 }): Promise<T> {
-
   const baseUrl = "http://localhost:3000";
   try {
     const response = await fetch(baseUrl + request, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': `${contentType}`,
+        "Content-Type": `${contentType}`,
       },
       body: JSON.stringify(payload),
     });
@@ -76,11 +75,10 @@ export async function deleteData<T>({
   request: string;
   payload?: Params[];
 }): Promise<T> {
-
   const baseUrl = "http://localhost:3000";
   let queryString = "";
   if (payload) {
-     queryString =
+    queryString =
       "?" +
       payload
         .map(
@@ -92,7 +90,7 @@ export async function deleteData<T>({
   const fullUrl = baseUrl + request + queryString;
   try {
     const response = await fetch(fullUrl, {
-      method: 'DELETE',
+      method: "DELETE",
     });
 
     if (!response.ok) {

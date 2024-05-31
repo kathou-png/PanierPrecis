@@ -11,36 +11,22 @@ import {
   ModalOverlay,
   Select,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { createNewInvoice } from "../../helpers/invoice";
-import { fetchGroceryStoresByUserId } from "./helpers/groceryStore";
-import { GroceryStore, User } from "../../../types";
+import { User } from "../../../types";
+import { useInvoice } from "../../helpers/hooks/useInvoice";
 
 type Props = {
   isOpen: boolean;
   onClose: () => void;
-  user : User | null;
-}; 
+  user: User | null;
+};
 export const AddInvoiceModal = ({ isOpen, onClose, user }: Props) => {
   const [name, setName] = useState("");
-  const [groceryStoreList, setGroceryStoreList] = useState<GroceryStore[]>([])
   const [groceryStoreId, setGroceryStoreId] = useState(0);
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!user) return;
-      try {
-        const fetchGroceryStores : GroceryStore[] = await fetchGroceryStoresByUserId({userId: Number(user.id)})
-        setGroceryStoreList(fetchGroceryStores);
-      } catch (error) {
-        console.error("Error fetching invoices:", error);
-        // Handle error
-      }
-    };
+  const { groceryStores } = useInvoice();
+  console.log(groceryStores);
 
-    if(user){
-      fetchData()
-    }
-  }, [user]);
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -48,37 +34,40 @@ export const AddInvoiceModal = ({ isOpen, onClose, user }: Props) => {
         <ModalHeader>Create a new invoice</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <Flex gap={2} flexDirection="column">
+          <Flex gap={2} flexDirection='column'>
             <Input
-              placeholder="Name"
+              placeholder='Name'
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
             <Select
-              placeholder="Select Date and Time"
-              size="md"
-              onChange={(e) => setGroceryStoreId(Number(e.target.value))}>
-              {groceryStoreList.map((item) => (
-                <option value={item.id}>{item.title}</option>
+              placeholder='Select Date and Time'
+              size='md'
+              onChange={(e) => setGroceryStoreId(Number(e.target.value))}
+            >
+              {groceryStores.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.title}
+                </option>
               ))}
-              </Select>
+            </Select>
           </Flex>
         </ModalBody>
 
         <ModalFooter>
-          <Button colorScheme="blue" mr={3} onClick={onClose}>
+          <Button colorScheme='blue' mr={3} onClick={onClose}>
             Close
           </Button>
           <Button
-            onClick={() =>{
-              if(groceryStoreId && name){
-              createNewInvoice(
-                {
-                title : name,
-                groceryStoreId : Number(groceryStoreId),
-                userId: Number(user?.id),
-              })
-            }}}
+            onClick={() => {
+              if (groceryStoreId && name) {
+                createNewInvoice({
+                  title: name,
+                  groceryStoreId: Number(groceryStoreId),
+                  userId: Number(user?.id),
+                });
+              }
+            }}
           >
             Create
           </Button>

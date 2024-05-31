@@ -33,7 +33,7 @@ router.get("/invoices/byUser", async function (req, res) {
     if (!invoices) {
       return res.status(404).json({ error: "Invoices not found" });
     }
-    // Modify the response to include grocery store data
+
     const responseData = invoices.map((invoice) => ({
       id: invoice.id,
       title: invoice.title,
@@ -99,11 +99,11 @@ router.get("/invoices/byId", async function (req, res) {
       id: item.id,
       reference: products[index].reference,
       title: products[index].title,
+      createdAt: products[index].createdAt,
       unitPrice: item.unitPrice,
       quantity: item.quantity,
       totalPrice: item.totalPrice,
       category: products[index].category.title,
-      // Add other item properties as needed
     }));
     res.status(200).json({ data: responseData });
   } catch (error) {

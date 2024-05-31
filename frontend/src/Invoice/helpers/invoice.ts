@@ -1,5 +1,5 @@
 import { deleteData, fetchData, postData } from "../../helpers/crud";
-import { Invoice, InvoiceItem } from "../../types";
+import { Invoice, Product } from "../../types";
 import { PostInvoicePayload } from "./types";
 
 export async function getInvoiceByUser({
@@ -11,15 +11,36 @@ export async function getInvoiceByUser({
   return fetchData({ request, params: [{ name: "userId", value: userId }] });
 }
 
+type PayloadItems = {
+  id: number;
+  category: string;
+  reference: string;
+  quantity: number;
+  createdAt: Date;
+  totalPrice: number;
+  unitPrice: number;
+};
 export async function getItemsByInvoice({
   invoiceId,
 }: {
   invoiceId: number;
-}): Promise<InvoiceItem[]> {
+}): Promise<PayloadItems[]> {
   const request = `/invoices/byId`;
   return fetchData({
     request,
     params: [{ name: "invoiceId", value: invoiceId }],
+  });
+}
+
+export async function getProductsByUser({
+  userId,
+}: {
+  userId: number;
+}): Promise<Product[]> {
+  const request = `/products/byUserId`;
+  return fetchData({
+    request,
+    params: [{ name: "userId", value: userId }],
   });
 }
 
@@ -30,5 +51,8 @@ export async function createNewInvoice(payload: PostInvoicePayload) {
 
 export async function deleteInvoice(payload: number) {
   const request = `/invoice`;
-  return deleteData({request,  payload: [{ name: "invoiceId", value: payload }]  });
+  return deleteData({
+    request,
+    payload: [{ name: "invoiceId", value: payload }],
+  });
 }

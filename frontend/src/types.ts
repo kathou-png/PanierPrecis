@@ -1,4 +1,3 @@
-
 export enum ItemCategory {
   MAISON = "home",
   FRUIT = "fruit",
@@ -15,7 +14,7 @@ export enum ItemCategory {
   ANIMALERIE = "animals",
   BIO = "bio",
   AUTRE = "other",
-} 
+}
 
 // users
 export type User = {
@@ -42,32 +41,30 @@ export type Category = {
   title: string;
 };
 
-export type InvoiceItem = Item & Product & {
-  category : string;
-};
-
 // items
-export type Item = {
+export type InvoiceItem = {
   id: number;
-  unitPrice: number;
-  totalPrice: number;
-  quantity: string;
+  category: Category;
+  createdAt: Date;
   invoiceId: number;
-  productId: number;
+  product: Product;
+  quantity: number;
+  totalPrice: number;
+  unitPrice: number;
 };
 
 // products
 export type Product = {
   id: number;
-  title: string;
-  reference: number;
+  category: Category;
   createdAt: Date;
-  categoryId: number;
+  reference: string;
+  title: string;
 };
 
 // grocery_stores
 export type GroceryStore = {
   id: number;
-  title: string;
   location: string;
+  title: string;
 };

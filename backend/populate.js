@@ -136,22 +136,31 @@ async function seedProducts() {
   try {
     const categories = await prisma.category.findMany();
 
+    const users = await prisma.user.findMany();
+
+ 
     await Promise.all(
-      categories.map(async (category) => {
-        await prisma.product.createMany({
-          data: [
-            {
-              title: `Product1 of ${category.title}`,
-              reference: String(uuidv4()),
-              categoryId: category.id,
-            },
-            {
-              title: `Product2 of ${category.title}`,
-              reference: String(uuidv4()),
-              categoryId: category.id,
-            },
-          ],
-        });
+      users.map(async (user) => {
+        await Promise.all(
+          categories.map(async (category) => {
+            await prisma.product.createMany({
+              data: [
+                {
+                  title: `Product1 of ${category.title} for user ${user.id}`,
+                  reference: uuidv4(),
+                  categoryId: category.id,
+                  userId: user.id,
+                },
+                {
+                  title: `Product2 of ${category.title} for user ${user.id}`,
+                  reference: uuidv4(),
+                  categoryId: category.id,
+                  userId: user.id,
+                },
+              ],
+            });
+          })
+        );
       })
     );
     console.log("*** Products populated successfully.***");
