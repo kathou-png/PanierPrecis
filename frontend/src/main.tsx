@@ -9,10 +9,7 @@ import { AuthProvider } from "./hooks/useAuth.tsx";
 import { ItemPage } from "./Invoice/components/Item/ItemPage.tsx";
 import { LoginPage } from "./Invoice/components/Login/LoginPage.tsx";
 import { InvoicePage } from "./Invoice/InvoicePage.tsx";
-import {
-  RecoilRoot,
-} from 'recoil';
-
+import { RecoilRoot } from "recoil";
 
 const router = createBrowserRouter([
   {
@@ -41,10 +38,10 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <ChakraProvider>
       <RecoilRoot>
-      <AuthProvider>
-        <RouterProvider router={router} />
-      </AuthProvider>
+        <AuthProvider>
+          <RouterProvider router={router} />
+        </AuthProvider>
       </RecoilRoot>
     </ChakraProvider>
-  </React.StrictMode>
+  </React.StrictMode>,
 );

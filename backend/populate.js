@@ -1,6 +1,6 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
-const { v4: uuidv4 } = require('uuid');
+const { v4: uuidv4 } = require("uuid");
 
 async function main() {
   await resetDatabase();
@@ -55,7 +55,7 @@ async function seedUsers() {
         await prisma.user.create({
           data: user,
         });
-      })
+      }),
     );
 
     console.log("*** Users populated successfully.***");
@@ -91,7 +91,7 @@ async function seedCategories() {
         await prisma.category.create({
           data: category,
         });
-      })
+      }),
     );
 
     console.log("*** Categories populated successfully.***");
@@ -120,9 +120,9 @@ async function seedGroceryStores() {
                 userId: user.id, // Assuming there is a userId field in the groceryStore model
               },
             });
-          })
+          }),
         );
-      })
+      }),
     );
 
     console.log("*** Grocery stores populated successfully.***");
@@ -138,7 +138,6 @@ async function seedProducts() {
 
     const users = await prisma.user.findMany();
 
- 
     await Promise.all(
       users.map(async (user) => {
         await Promise.all(
@@ -159,9 +158,9 @@ async function seedProducts() {
                 },
               ],
             });
-          })
+          }),
         );
-      })
+      }),
     );
     console.log("*** Products populated successfully.***");
   } catch (error) {
@@ -173,10 +172,10 @@ async function seedProducts() {
 async function seedInvoices() {
   try {
     // Fetch all users from the database
-    const users= await prisma.user.findMany();
+    const users = await prisma.user.findMany();
 
     // Fetch all grocery stores from the database
-    const groceryStores= await prisma.groceryStore.findMany();
+    const groceryStores = await prisma.groceryStore.findMany();
 
     // Create invoices for each user for each grocery store
     await Promise.all(
@@ -190,9 +189,9 @@ async function seedInvoices() {
                 groceryStoreId: store.id,
               },
             });
-          })
+          }),
         );
-      })
+      }),
     );
 
     console.log("***Invoices populated successfully.***");
@@ -208,7 +207,7 @@ async function seedItems() {
     const invoices = await prisma.invoice.findMany();
 
     // Fetch all products from the database
-    const products= await prisma.product.findMany();
+    const products = await prisma.product.findMany();
 
     // Create items for each product within each invoice
     await Promise.all(
@@ -227,9 +226,9 @@ async function seedItems() {
               },
             });
             price += 1;
-          })
+          }),
         );
-      })
+      }),
     );
     console.log("***Items populated successfully.***");
   } catch (error) {

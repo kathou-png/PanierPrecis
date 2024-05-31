@@ -91,7 +91,7 @@ router.get("/invoices/byId", async function (req, res) {
           throw new Error(`Product not found for item ${item.id}`);
         }
         return product;
-      })
+      }),
     );
 
     // Modify the response to include items and products
