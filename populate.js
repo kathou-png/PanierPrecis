@@ -1,6 +1,7 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const { v4: uuidv4 } = require("uuid");
+const { faker } = require("@faker-js/faker");
 
 async function main() {
   await resetDatabase();
@@ -46,8 +47,16 @@ async function resetDatabase() {
 async function seedUsers() {
   try {
     const users = [
-      { username: "User 1", email: "user1@user1.com", password: "password1" },
-      { username: "User 2", email: "user2@user2.com", password: "password2" },
+      {
+        username: faker.person.fullName(),
+        email: faker.internet.email(),
+        password: faker.internet.password(),
+      },
+      {
+        username: faker.person.fullName(),
+        email: faker.internet.email(),
+        password: faker.internet.password(),
+      },
     ];
     // Create users in the database
     await Promise.all(
@@ -55,7 +64,7 @@ async function seedUsers() {
         await prisma.user.create({
           data: user,
         });
-      }),
+      })
     );
 
     console.log("*** Users populated successfully.***");
@@ -91,7 +100,7 @@ async function seedCategories() {
         await prisma.category.create({
           data: category,
         });
-      }),
+      })
     );
 
     console.log("*** Categories populated successfully.***");
@@ -104,8 +113,14 @@ async function seedCategories() {
 async function seedGroceryStores() {
   try {
     const groceryStores = [
-      { title: "Auchan", location: "3 rue des connards" },
-      { title: "Liddl", location: "10 avenue des violettes" },
+      {
+        title: faker.company.name(),
+        location: faker.location.streetAddress({ useFullAddress: true }),
+      },
+      {
+        title: faker.company.name(),
+        location: faker.location.streetAddress({ useFullAddress: true }),
+      },
     ];
     // Fetch all users from the database
     const users = await prisma.user.findMany();
@@ -120,9 +135,9 @@ async function seedGroceryStores() {
                 userId: user.id, // Assuming there is a userId field in the groceryStore model
               },
             });
-          }),
+          })
         );
-      }),
+      })
     );
 
     console.log("*** Grocery stores populated successfully.***");
@@ -145,22 +160,22 @@ async function seedProducts() {
             await prisma.product.createMany({
               data: [
                 {
-                  title: `Product1 of ${category.title} for user ${user.id}`,
-                  reference: uuidv4(),
+                  title: faker.commerce.product(),
+                  reference: faker.string.uuid(),
                   categoryId: category.id,
                   userId: user.id,
                 },
                 {
-                  title: `Product2 of ${category.title} for user ${user.id}`,
-                  reference: uuidv4(),
+                  title: faker.commerce.product(),
+                  reference: faker.string.uuid(),
                   categoryId: category.id,
                   userId: user.id,
                 },
               ],
             });
-          }),
+          })
         );
-      }),
+      })
     );
     console.log("*** Products populated successfully.***");
   } catch (error) {
@@ -189,9 +204,9 @@ async function seedInvoices() {
                 groceryStoreId: store.id,
               },
             });
-          }),
+          })
         );
-      }),
+      })
     );
 
     console.log("***Invoices populated successfully.***");
@@ -226,9 +241,9 @@ async function seedItems() {
               },
             });
             price += 1;
-          }),
+          })
         );
-      }),
+      })
     );
     console.log("***Items populated successfully.***");
   } catch (error) {

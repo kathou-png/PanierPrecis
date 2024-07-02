@@ -1,15 +1,22 @@
 import express from "express";
 import { PrismaClient } from "@prisma/client";
+import { validateUserId } from "./helpers";
 
 const prisma = new PrismaClient();
 const router = express.Router();
 
 router.get("/products/byUserId", async function (req, res) {
-  const userId = req.query.userId ? Number(req.query.userId) : 0;
+  const userId = req.query.userId;
+  const { userId: parsedUserId, isValid, message } = validateUserId(userId);
+
+  if (!isValid && parsedUserId === undefined) {
+    return res.status(400).json({ error: message });
+  }
+
   try {
     const products = await prisma.product.findMany({
       where: {
-        userId: userId,
+        userId: parsedUserId,
       },
       include: {
         category: true,
@@ -19,7 +26,6 @@ router.get("/products/byUserId", async function (req, res) {
     if (!products) {
       return res.status(404).json({ error: "Products not found" });
     }
-    // Modify the response to include grocery store data
     const responseData = products.map((product) => ({
       id: product.id,
       title: product.title,

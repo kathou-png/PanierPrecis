@@ -1,5 +1,4 @@
 import express from "express";
-import { device } from "../controllers/controllers";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();

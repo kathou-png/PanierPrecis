@@ -1,15 +1,16 @@
 import express from "express";
-import { PrismaClient, Invoice } from "@prisma/client";
+import { PrismaClient, Invoice, GroceryStore } from "@prisma/client";
+import { validateUserId } from "./helpers";
 
 const prisma = new PrismaClient();
 const router = express.Router();
 
-router.get("/invoices", async function (req, res) {
+// * THIS SHOULD BE DELETED ON PRODUCTION
+router.get("/invoices", async function (_, res) {
   try {
     // Fetch all users from the database using Prisma
     const invoices = await prisma.invoice.findMany();
 
-    // Return the users as a response
     res.json(invoices);
   } catch (error) {
     // Handle errors
@@ -19,14 +20,20 @@ router.get("/invoices", async function (req, res) {
 });
 
 router.get("/invoices/byUser", async function (req, res) {
-  const userId = req.query.userId ? Number(req.query.userId) : 0;
+  const userId = req.query.userId;
+  const { userId: parsedUserId, isValid, message } = validateUserId(userId);
+
+  if (!isValid) {
+    return res.status(400).json({ error: message });
+  }
+
   try {
     const invoices = await prisma.invoice.findMany({
       where: {
-        userId: userId,
+        userId: parsedUserId,
       },
       include: {
-        groceryStore: true, // Include related grocery store data
+        groceryStore: true,
       },
     });
 
@@ -34,16 +41,18 @@ router.get("/invoices/byUser", async function (req, res) {
       return res.status(404).json({ error: "Invoices not found" });
     }
 
-    const responseData = invoices.map((invoice: Invoice) => ({
-      id: invoice.id,
-      title: invoice.title,
-      created_at: invoice.createdAt,
-      grocery_store: {
-        id: invoice.groceryStore.id,
-        title: invoice.groceryStore.title,
-        location: invoice.groceryStore.location,
-      },
-    }));
+    const responseData = invoices.map(
+      (invoice: Invoice & { groceryStore: GroceryStore }) => ({
+        id: invoice.id,
+        title: invoice.title,
+        created_at: invoice.createdAt,
+        grocery_store: {
+          id: invoice.groceryStore.id,
+          title: invoice.groceryStore.title,
+          location: invoice.groceryStore.location,
+        },
+      })
+    );
     res.status(200).json({ data: responseData });
   } catch (error) {
     // Handle errors
@@ -60,7 +69,7 @@ router.get("/invoices/byId", async function (req, res) {
         id: Number(invoiceId),
       },
       include: {
-        items: true, // Include related items store data
+        items: true,
       },
     });
 
@@ -115,25 +124,30 @@ router.get("/invoices/byId", async function (req, res) {
 
 router.post("/invoice", async (req, res) => {
   const { title, userId, groceryStoreId } = req.body;
+  const { userId: parsedUserId, isValid, message } = validateUserId(userId);
+
+  if (!isValid) {
+    return res.status(400).json({ error: message });
+  }
 
   try {
     const invoice = await prisma.invoice.create({
       data: {
         title: title,
-        userId: userId,
+        userId: parsedUserId,
         groceryStoreId: groceryStoreId,
       },
     });
     res.status(201).json(invoice);
   } catch (error) {
-    res.status(500).json({ error: "marche po" });
+    res.status(500).json({ error: "Error logging in" });
   }
 });
 router.delete("/invoice", async (req, res) => {
   const { invoiceId } = req.query;
 
   try {
-    const invoice = await prisma.invoice.delete({
+    await prisma.invoice.delete({
       where: {
         id: Number(invoiceId),
       },

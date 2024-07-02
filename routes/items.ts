@@ -7,8 +7,6 @@ const router = express.Router();
 router.post("/invoice/newItem", async function (req, res) {
   const { unitPrice, totalPrice, quantity, productReference, invoiceId } =
     req.body;
-  console.log(req.body);
-
   try {
     const invoice = await prisma.invoice.findUnique({
       where: {
@@ -51,7 +49,7 @@ router.post("/invoice/newItem", async function (req, res) {
 router.delete("/invoice/item", async function (req, res) {
   const { id, invoiceId } = req.query;
   try {
-    const item = await prisma.item.delete({
+    await prisma.item.delete({
       where: {
         id: Number(id),
         invoiceId: Number(invoiceId),
