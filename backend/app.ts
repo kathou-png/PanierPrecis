@@ -1,6 +1,4 @@
-import { GroceryStore } from "@prisma/client";
 import express from "express";
-import bodyParser from "body-parser";
 import routes from "./routes/routes";
 import invoices from "./routes/invoices";
 import users from "./routes/users";
@@ -16,7 +14,6 @@ const app = express();
 const PORT = 3000;
 
 app.use(cors());
-app.use(bodyParser.json());
 app.use(routes);
 app.use(users);
 app.use(login);
