@@ -20,9 +20,7 @@ export enum ItemCategory {
 export type User = {
   id: number;
   username: string;
-  password: string;
-  email: string; // Assuming email is a new field
-  createdAt: Date;
+  email: string;
 };
 
 // invoices

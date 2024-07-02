@@ -17,9 +17,6 @@ const Navbar = () => {
       </div>
       {user && (
         <>
-          <div>
-            <Link to="/invoice">Facture</Link>
-          </div>
 
           <Button
             onClick={() => {

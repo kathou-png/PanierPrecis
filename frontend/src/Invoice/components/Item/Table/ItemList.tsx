@@ -12,7 +12,7 @@ export const ItemList = ({ itemList }: Props) => {
             <Flex>{item.product.reference.slice(-5)}</Flex>
           </Td>
           <Td>
-            <p>item.product.title</p>
+            <p>{item.product.title}</p>
           </Td>
           <Td>{item.unitPrice}</Td>
           <Td>{item.quantity}</Td>

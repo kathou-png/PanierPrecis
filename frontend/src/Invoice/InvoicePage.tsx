@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
-import { Layout } from "../Layout";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
-import { Button, Card, Flex, Grid, GridItem } from "@chakra-ui/react";
+import { Button, Card, Flex, Grid, GridItem, Heading } from '@chakra-ui/react';
 import { ViewIcon } from "@chakra-ui/icons";
 import { Invoice } from "../types";
 import { AddInvoiceModal } from "./components/Modal/AddInvoiceModal";
 import { getInvoiceByUser } from "./helpers/invoice";
 import { InvoiceProvider } from "./helpers/hooks/useInvoice";
+import { VerticalLayout } from '../Layouts/VerticalLayout.tsx';
 
 export const InvoicePage = () => {
   const [showAddModal, setShowAddModal] = useState(false);
@@ -22,6 +22,7 @@ export const InvoicePage = () => {
         const fetchedInvoices = await getInvoiceByUser({
           userId: user.id,
         });
+        console.log(fetchedInvoices);
         setInvoiceList(fetchedInvoices);
       } catch (error) {
         console.error("Error fetching invoices:", error);
@@ -33,9 +34,9 @@ export const InvoicePage = () => {
   }, []);
 
   return (
-    <Layout>
+    <VerticalLayout>
       <InvoiceProvider userId={user?.id ?? 0}>
-        <h1>📝 Invoice</h1>
+        <Heading textAlign="left"  padding={"1rem"}>Invoice</Heading>
         <Grid gap={4} padding={4} maxWidth={"100vw"}>
           {invoiceList.map((invoice) => (
             <GridItem key={invoice.id} width={"300px"}>
@@ -62,6 +63,6 @@ export const InvoicePage = () => {
           />
         )}
       </InvoiceProvider>
-    </Layout>
+    </VerticalLayout>
   );
 };

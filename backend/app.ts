@@ -1,15 +1,14 @@
-import { GroceryStore } from "@prisma/client";
-import express from "express";
-import bodyParser from "body-parser";
-import routes from "./routes/routes";
-import invoices from "./routes/invoices";
-import users from "./routes/users";
-import login from "./routes/login";
-import items from "./routes/items";
-import categories from "./routes/categories";
-import groceryStore from "./routes/groceryStore";
-import products from "./routes/products";
-const cors = require("cors");
+import express from 'express';
+import bodyParser from 'body-parser';
+import routes from './routes/routes';
+import invoices from './routes/invoices';
+import users from './routes/users';
+import login from './routes/login';
+import items from './routes/items';
+import categories from './routes/categories';
+import groceryStore from './routes/groceryStore';
+import products from './routes/products';
+const cors = require('cors');
 
 const app = express();
 

@@ -29,7 +29,7 @@ export const submitLogin = async ({
   if (email !== "" && password !== "") {
     try {
       const response = await fetch(
-        "http://localhost:3000/login",
+        "http://localhost:8000/login",
         {
           method: "POST",
           headers: {
@@ -40,9 +40,9 @@ export const submitLogin = async ({
       );
       const res = await response.json();
 
-      if (res.data) {
-        if (res.data) {
-          const user: User = res.data;
+      if (res[0]) {
+        if (res[0]) {
+          const user: User = res[0];
           await login(user);
           navigate("/invoice");
         }

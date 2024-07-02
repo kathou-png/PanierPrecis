@@ -9,7 +9,7 @@ import {
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../hooks/useAuth";
-import { Layout } from "../../../Layout";
+import { MainLayout } from "../../../Layouts/MainLayout.tsx";
 import { User } from "../../../types";
 import { getAllUsers, submitLogin } from "./helpers/users";
 
@@ -35,7 +35,7 @@ export const LoginPage = () => {
   }, []);
 
   return (
-    <Layout>
+    <MainLayout>
       <Box>
         <FormControl width={"50vw"} p={5} justifyContent={"center"}>
           <FormLabel>Email address</FormLabel>
@@ -77,6 +77,6 @@ export const LoginPage = () => {
           ))}
         </FormControl>
       </Box>
-    </Layout>
+    </MainLayout>
   );
 };

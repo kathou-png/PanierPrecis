@@ -1,7 +1,7 @@
 import { ChevronLeftIcon } from "@chakra-ui/icons";
 import { Heading, Button } from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
-import { Layout } from "../../../Layout";
+import { MainLayout } from "../../../Layouts/MainLayout.tsx";
 import { deleteInvoice } from "../../helpers/invoice";
 import { ItemTable } from "./ItemTable";
 import { VizByInvoice } from "./vizByInvoice";
@@ -13,7 +13,7 @@ export const ItemPage = () => {
   const { user } = useAuth();
 
   return (
-    <Layout>
+    <MainLayout>
       <InvoiceProvider userId={user?.id ?? 0}>
         <ChevronLeftIcon
           position='absolute'
@@ -29,6 +29,6 @@ export const ItemPage = () => {
           Delete invoice
         </Button>
       </InvoiceProvider>
-    </Layout>
+    </MainLayout>
   );
 };

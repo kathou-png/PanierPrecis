@@ -1,10 +1,10 @@
-import express from "express";
-import { PrismaClient } from "@prisma/client";
+import express from 'express';
+import { Invoice, PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 const router = express.Router();
 
-router.get("/invoices", async function (req, res) {
+router.get('/invoices', async function (req, res) {
   try {
     // Fetch all users from the database using Prisma
     const invoices = await prisma.invoice.findMany();
@@ -13,12 +13,12 @@ router.get("/invoices", async function (req, res) {
     res.json(invoices);
   } catch (error) {
     // Handle errors
-    console.error("Error fetching invoices:", error);
-    res.status(500).json({ error: "Internal server error" });
+    console.error('Error fetching invoices:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
 
-router.get("/invoices/byUser", async function (req, res) {
+router.get('/invoices/byUser', async function (req, res) {
   const userId = req.query.userId ? Number(req.query.userId) : 0;
   try {
     const invoices = await prisma.invoice.findMany({
@@ -26,12 +26,12 @@ router.get("/invoices/byUser", async function (req, res) {
         userId: userId,
       },
       include: {
-        groceryStore: true, // Include related grocery store data
+        groceryStore: true,
       },
     });
 
     if (!invoices) {
-      return res.status(404).json({ error: "Invoices not found" });
+      return res.status(404).json({ error: 'Invoices not found' });
     }
 
     const responseData = invoices.map((invoice) => ({
@@ -47,12 +47,12 @@ router.get("/invoices/byUser", async function (req, res) {
     res.status(200).json({ data: responseData });
   } catch (error) {
     // Handle errors
-    console.error("Error logging in:", error);
-    res.status(500).json({ error: "Internal server error" });
+    console.error('Error logging in:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
 
-router.get("/invoices/byId", async function (req, res) {
+router.get('/invoices/byId', async function (req, res) {
   const invoiceId = req.query.invoiceId;
   try {
     const invoice = await prisma.invoice.findUnique({
@@ -60,23 +60,21 @@ router.get("/invoices/byId", async function (req, res) {
         id: Number(invoiceId),
       },
       include: {
-        items: true, // Include related items store data
+        items: true,
       },
     });
 
     if (!invoice) {
-      return res.status(404).json({ error: "Invoice not found" });
+      return res.status(404).json({ error: 'Invoice not found' });
     }
 
-    // Validate that each item has a valid productId
     const invalidItems = invoice.items.filter((item) => !item.productId);
     if (invalidItems.length > 0) {
       return res
         .status(400)
-        .json({ error: "Some items are not related to a product" });
+        .json({ error: 'Some items are not related to a product' });
     }
 
-    // Get products for each item
     const products = await Promise.all(
       invoice.items.map(async (item) => {
         const product = await prisma.product.findUnique({
@@ -94,7 +92,6 @@ router.get("/invoices/byId", async function (req, res) {
       }),
     );
 
-    // Modify the response to include items and products
     const responseData = invoice.items.map((item, index) => ({
       id: item.id,
       reference: products[index].reference,
@@ -107,13 +104,12 @@ router.get("/invoices/byId", async function (req, res) {
     }));
     res.status(200).json({ data: responseData });
   } catch (error) {
-    // Handle errors
-    console.error("Error logging in:", error);
-    res.status(500).json({ error: "Internal server error" });
+    console.error('Error logging in:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
 
-router.post("/invoice", async (req, res) => {
+router.post('/invoice', async (req, res) => {
   const { title, userId, groceryStoreId } = req.body;
 
   try {
@@ -126,10 +122,10 @@ router.post("/invoice", async (req, res) => {
     });
     res.status(201).json(invoice);
   } catch (error) {
-    res.status(500).json({ error: "marche po" });
+    res.status(500).json({ error: 'Error creating invoice' });
   }
 });
-router.delete("/invoice", async (req, res) => {
+router.delete('/invoice', async (req, res) => {
   const { invoiceId } = req.query;
 
   try {
@@ -138,9 +134,9 @@ router.delete("/invoice", async (req, res) => {
         id: Number(invoiceId),
       },
     });
-    res.status(201).json("OK");
+    res.status(201).json(invoice);
   } catch (error) {
-    res.status(500).json({ error: "marche po" });
+    res.status(500).json({ error: 'Error deleting invoice' });
   }
 });
 

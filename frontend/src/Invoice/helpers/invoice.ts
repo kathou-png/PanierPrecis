@@ -1,4 +1,4 @@
-import { deleteData, fetchData, postData } from "../../helpers/crud";
+import { deleteData, fetchData, postData, postDataBis } from '../../helpers/crud';
 import { Invoice, Product } from "../../types";
 import { PostInvoicePayload } from "./types";
 
@@ -45,8 +45,17 @@ export async function getProductsByUser({
 }
 
 export async function createNewInvoice(payload: PostInvoicePayload) {
-  const request = `/invoice`;
-  return postData({ request, payload });
+  const request = `/invoices`;
+  console.log(payload.title, payload.userId)
+  let formData = new FormData();
+  formData.append('title', payload.title)
+  formData.append('userId', String(payload.userId) )
+  if(payload.pdfFile) {
+    formData.append('file', payload.pdfFile);
+  }
+  console.log(formData)
+
+  return postDataBis({ request, payload : formData });
 }
 
 export async function deleteInvoice(payload: number) {

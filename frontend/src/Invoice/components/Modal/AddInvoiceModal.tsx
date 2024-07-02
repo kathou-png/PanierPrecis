@@ -11,27 +11,39 @@ import {
   ModalOverlay,
   Select,
 } from "@chakra-ui/react";
-import { useState } from "react";
-import { createNewInvoice } from "../../helpers/invoice";
+import { useEffect, useState } from 'react';
+import { createNewInvoice, getItemsByInvoice } from '../../helpers/invoice';
 import { User } from "../../../types";
 import { useInvoice } from "../../helpers/hooks/useInvoice";
+import DropZone from './DropZone.tsx';
 
 type Props = {
   isOpen: boolean;
   onClose: () => void;
   user: User | null;
 };
+
 export const AddInvoiceModal = ({ isOpen, onClose, user }: Props) => {
   const [name, setName] = useState("");
+  const [dataType, setDataType] = useState('pdf');
+  const [pdfFile, setPdfFile] = useState<any>(undefined);
   const [groceryStoreId, setGroceryStoreId] = useState(0);
   const { groceryStores } = useInvoice();
-  console.log(groceryStores);
+  useEffect(() => {
+   console.log(pdfFile)
+  }, [pdfFile]);
+
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Create a new invoice</ModalHeader>
+        <Flex justifyItems="center" padding="2rem" gap={2}>
+          <Button onClick={()=> setDataType('pdf')} isActive={dataType  == "pdf"}>PDF</Button>
+          <Button onClick={()=> setDataType('manual')} isActive={dataType  == "manual"}>Manual</Button>
+        </Flex>
+        {dataType == "pdf" && (<DropZone pdfFile={pdfFile} setPdfFile={setPdfFile}/>)}
         <ModalCloseButton />
         <ModalBody>
           <Flex gap={2} flexDirection='column'>
@@ -65,6 +77,7 @@ export const AddInvoiceModal = ({ isOpen, onClose, user }: Props) => {
                   title: name,
                   groceryStoreId: Number(groceryStoreId),
                   userId: Number(user?.id),
+                  pdfFile : pdfFile as File
                 });
               }
             }}
