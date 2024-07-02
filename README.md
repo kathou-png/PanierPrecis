@@ -1,37 +1,18 @@
-# PanierPrecis
+run nodemon app.ts to launch the server
 
-PanierPrecis is a project aiming to build a precise shopping cart application with a frontend built using React with TypeScript and a backend utilizing Prisma and Express.
+To generate the prisma client do :
+npx prisma generate
 
-## Features
+For a migration :
 
-- User authentication and authorization.
-- Creating, updating, and deleting products.
+- Modify the schema
+  if the migration file can be created and executed directly :
+- npx prisma migrate dev --name init
 
-## Technologies Used
+else :
 
-### Frontend
+- npx prisma migrate dev --create-only
+- npx prisma migrate dev
 
-- React: A JavaScript library for building user interfaces.
-- TypeScript: A typed superset of JavaScript that compiles to plain JavaScript.
-
-### Backend
-
-- Prisma: A modern database access toolkit for TypeScript and Node.js.
-- Express: A fast, unopinionated, minimalist web framework for Node.js.
-
-## Getting Started
-
-To get a local copy of the project up and running, follow these steps:
-
-### Prerequisites
-
-- Node.js and npm installed on your machine.
-- Docker installed (for running the database with Docker Compose).
-
-### Installation
-
-1. Clone the repository:
-
-   ```bash
-   git clone https://github.com/kathou-png/PanierPrecis.git
-   ```
+To populate db :
+node populate.js
